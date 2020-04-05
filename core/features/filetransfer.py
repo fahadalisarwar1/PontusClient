@@ -2,8 +2,12 @@ from core.utils import display_msg, zipdir
 import json
 from glob import glob
 import os
+import tqdm
 import zipfile
 
+
+SEPARATOR = "<SEPARATOR>"
+BUFFER_SIZE = 2 * 4096 # send 4096 bytes each time step
 
 class FileTransfer:
     def __init__(self, client):
@@ -57,6 +61,28 @@ class FileTransfer:
 
         self.client.sock.send(encoded_data)
         
+    def upload_fancy(self, file_or_folder):
+        display_msg("Uploading")
+        if file_or_folder == "quit":
+            display_msg("Exiting upload function", "r")
+            return
+
+        file_size = os.path.getsize(file_or_folder)
+        self.client.sock.send(f"{file_or_folder}{SEPARATOR}{file_size}".encode())
+
+        with open(file_or_folder, "rb") as file:
+            data_buffer = file.read(BUFFER_SIZE)
+            while data_buffer:
+                self.client.sock.send(data_buffer)
+                data_buffer = file.read(BUFFER_SIZE)
+        
+
+        self.client.sock.send("DONE_SENDING".encode())
+        
+
+        display_msg("successfully uploaded ", "y")
+
+        # self.client.sock.shutdown(2)
 
 
 
@@ -80,7 +106,9 @@ def upload(client):
         filename = client.receive_data()
         ft = FileTransfer(client)
 
-        ft.upload_file(filename)
+        # ft.upload_file(filename)
+        ft.upload_fancy(filename)
+        display_msg("Exiting upload function")
 
 
 

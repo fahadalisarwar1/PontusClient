@@ -9,7 +9,7 @@ CHUNK_SIZE = 1024
 class Client:
     def __init__(self, server_ip, server_port=8080):
         self.DELIMETER = "<END_OF_BYTES>"
-        self.CHUNK_SIZE = 4 * 1024
+        self.CHUNK_SIZE = 64 * 1024
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   
             self.server_addr = (server_ip, server_port)

