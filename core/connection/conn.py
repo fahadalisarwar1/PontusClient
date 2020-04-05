@@ -1,6 +1,7 @@
 import socket
 from core.utils  import display_msg
 import os
+import time
 
 os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -28,14 +29,15 @@ class Client:
     def send_data(self, data=""):
         data_to_send = data + self.DELIMETER
         data_bin = data_to_send.encode()
-        self.sock.send(data_bin)
+        self.sock.sendall(data_bin)
+        
 
     def receive_data(self):
         data = b''
         while True:
             chunk = self.sock.recv(self.CHUNK_SIZE)
 
-            if chunk.endswith(self.DELIMETER.encode()):
+            if self.DELIMETER.encode() in chunk:
                 chunk = chunk[:-len(self.DELIMETER)]
                 data += chunk
                 break

