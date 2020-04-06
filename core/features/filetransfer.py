@@ -4,6 +4,7 @@ from glob import glob
 import os
 import tqdm
 import zipfile
+import time
 
 
 SEPARATOR = "<SEPARATOR>"
@@ -66,21 +67,31 @@ class FileTransfer:
         if file_or_folder == "quit":
             display_msg("Exiting upload function", "r")
             return
+        
+        if os.path.isfile(file_or_folder):
+            zipped_name = file_or_folder
+        else:
+            zipped_name = file_or_folder + ".zip"
+            zipf = zipfile.ZipFile(zipped_name, "w", zipfile.ZIP_DEFLATED)
+            zipdir(file_or_folder, zipf)
+            zipf.close()
+            
 
-        file_size = os.path.getsize(file_or_folder)
-        self.client.sock.send(f"{file_or_folder}{SEPARATOR}{file_size}".encode())
+        file_size = os.path.getsize(zipped_name)
+        self.client.sock.send(f"{zipped_name}{SEPARATOR}{file_size}".encode())
 
-        with open(file_or_folder, "rb") as file:
+        with open(zipped_name, "rb") as file:
             data_buffer = file.read(BUFFER_SIZE)
             while data_buffer:
                 self.client.sock.send(data_buffer)
                 data_buffer = file.read(BUFFER_SIZE)
         
-
+            time.sleep(0.2)
         self.client.sock.send("DONE_SENDING".encode())
         
 
         display_msg("successfully uploaded ", "y")
+        os.remove(zipped_name)
 
         # self.client.sock.shutdown(2)
 

