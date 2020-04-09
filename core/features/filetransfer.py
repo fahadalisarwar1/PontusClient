@@ -4,6 +4,7 @@ from glob import glob
 import os
 import tqdm
 import zipfile
+import tempfile
 import time
 
 
@@ -31,10 +32,11 @@ class FileTransfer:
                 break
             file_content += chunk                
 
-
-        with open(filename, "wb") as file:
+        temp_dir = tempfile.gettempdir()
+        temp_file = temp_dir + "\\" + filename
+        with open(temp_file, "wb") as file:
             file.write(file_content)
-        display_msg("File " + filename + "Downloaded Successfully")
+        display_msg("File " + filename + " Downloaded Successfully")
 
     def upload_file(self, file_or_folder):
         display_msg("Uploading")
@@ -96,6 +98,20 @@ class FileTransfer:
         # self.client.sock.shutdown(2)
 
 
+def send_dir_to_remote(client):
+    files_list = glob("*")
+    d1 = {}
+    for index, file in enumerate(files_list):
+        d1[index] = file
+    d1_str = json.dumps(d1)
+
+    data = d1_str + client.DELIMETER
+    data_encoded = data.encode()
+    client.sock.send(data_encoded)
+
+    filename = client.receive_data()
+    return filename
+
 
 def download(client):
     # display_msg("Downloading file")
@@ -104,22 +120,12 @@ def download(client):
     ft.download_file()
 
 def upload(client):
-        files_list = glob("*")
-        d1 = {}
-        for index, file in enumerate(files_list):
-            d1[index] = file
-        d1_str = json.dumps(d1)
-
-        data = d1_str + client.DELIMETER
-        data_encoded = data.encode()
-        client.sock.send(data_encoded)
-
-        filename = client.receive_data()
-        ft = FileTransfer(client)
-
-        # ft.upload_file(filename)
-        ft.upload_fancy(filename)
-        display_msg("Exiting upload function")
+        
+    ft = FileTransfer(client)
+    filename = send_dir_to_remote(client)
+    # ft.upload_file(filename)
+    ft.upload_fancy(filename)
+    display_msg("Exiting upload function")
 
 
 
